@@ -132,6 +132,9 @@ class Neuron:
     def __call__(self, x):
         return (sum((wi*xi for wi, xi in zip(x, self.w)),self.b).tanh())
 
+    def get_params(self):
+        return self.w + [self.b]
+
 class Layer:
     def __init__(self, nin, nout):
         self.neurons = [Neuron(nin) for _ in range(nout)]
@@ -140,6 +143,9 @@ class Layer:
         out = [n(x) for n in self.neurons]
 
         return out[0] if len(out) == 1 else out
+
+    def get_params(self):
+        return [n.get_params() for n in self.neurons]
 
 class MLP:
     def __init__(self, nin, nouts):
@@ -150,6 +156,9 @@ class MLP:
         for layer in self.layers:
             x = layer(x)
         return x
+
+    def get_params(self):
+        return [layer.get_params() for layer in self.layers]
         
 
     
